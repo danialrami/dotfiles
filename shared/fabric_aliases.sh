@@ -2,7 +2,7 @@
 # Shared between zsh and bash
 
 # Define the base directory for Obsidian notes
-obsidian_base="${HOME}/Obsidian/ore/Notes/Life/Chachi/fabric"
+obsidian_base="${HOME}/Nextcloud/ore/Notes/Life/Chachi/fabric"
 
 _configure_fabric() {
   # Loop through pattern files
