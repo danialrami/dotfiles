@@ -11,6 +11,7 @@ brew "b2-tools"
 brew "bash"
 brew "freetype"
 brew "bazel"
+brew "bitwarden-cli"
 brew "boost"
 brew "carla"
 brew "chuck", link: false

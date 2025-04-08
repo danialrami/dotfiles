@@ -5,7 +5,7 @@ import subprocess
 from datetime import datetime
 
 # Define paths and commands
-DOTFILES_REPO = "https://github.com/yourusername/dotfiles.git"  # Replace with your repo URL
+DOTFILES_REPO = "https://github.com/danialrami/dotfiles"  # Replace with your repo URL
 DOTFILES_DIR = os.path.expanduser("~/.dotfiles")
 BREWFILE_PATH = os.path.join(DOTFILES_DIR, "brew/Brewfile")
 STOW_PACKAGES = ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim"]
