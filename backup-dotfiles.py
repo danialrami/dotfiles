@@ -9,10 +9,16 @@ from datetime import datetime
 DOTFILES_DIR = os.path.expanduser("~/.dotfiles")
 BREWFILE_PATH = os.path.join(DOTFILES_DIR, "brew/Brewfile")
 BACKUP_DIR = os.path.expanduser("~/dotfiles-backup")
-STOW_PACKAGES = ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim"]
-CONFIG_TARGETS = {
-    "starship": "~/.config",
-    "neovim": "~/.config",
+
+# Explicitly define each package's mapping (source → target)
+PACKAGES = {
+    "bash": {"files": [".bashrc"], "target": "~"},
+    "zsh": {"files": [".zshrc"], "target": "~"},
+    "tmux": {"files": [".tmux.conf"], "target": "~"},
+    "wezterm": {"files": [".wezterm.lua"], "target": "~"},
+    "brew": {"files": ["Brewfile"], "target": "~"},
+    "starship": {"files": ["starship.toml"], "target": "~/.config"},
+    "neovim": {"files": [".config/nvim"], "target": "~", "is_dir": True}
 }
 
 def run_command(command, verbose=True):
@@ -32,56 +38,85 @@ def update_brewfile():
     run_command(f"brew bundle dump --force --file={BREWFILE_PATH}", verbose=False)
     print("[INFO] Brewfile updated.")
 
-def backup_and_stow_packages():
-    """Backup existing files and stow packages."""
-    print("[INFO] Starting stow process with backup protection...")
-    
-    # Create backup directory if it doesn't exist
+def backup_existing_files():
+    """Backup existing files that will be replaced by symlinks."""
+    print("[INFO] Backing up existing files...")
     os.makedirs(BACKUP_DIR, exist_ok=True)
-    print(f"[INFO] Using backup directory: {BACKUP_DIR}")
     
-    # Process each package
-    for package in STOW_PACKAGES:
-        print(f"[INFO] Processing package: {package}")
-        
-        # Determine target directory
-        target_dir = os.path.expanduser(CONFIG_TARGETS.get(package, "~"))
-        
-        # Ensure target directory exists
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_subdir = os.path.join(BACKUP_DIR, f"backup_{timestamp}")
+    os.makedirs(backup_subdir, exist_ok=True)
+    
+    for package, config in PACKAGES.items():
+        target_dir = os.path.expanduser(config["target"])
+        for file in config["files"]:
+            target_path = os.path.join(target_dir, file)
+            backup_path = os.path.join(backup_subdir, package, file)
+            
+            if os.path.exists(target_path) and not os.path.islink(target_path):
+                # Create parent directories for backup
+                os.makedirs(os.path.dirname(backup_path), exist_ok=True)
+                print(f"[INFO] Backing up {target_path} to {backup_path}")
+                try:
+                    shutil.copy2(target_path, backup_path) if os.path.isfile(target_path) else \
+                    shutil.copytree(target_path, backup_path)
+                except Exception as e:
+                    print(f"[WARN] Failed to backup {target_path}: {e}")
+
+def remove_symlinks():
+    """Remove existing symlinks for all packages."""
+    print("[INFO] Removing existing symlinks...")
+    
+    for package, config in PACKAGES.items():
+        target_dir = os.path.expanduser(config["target"])
+        for file in config["files"]:
+            target_path = os.path.join(target_dir, file)
+            if os.path.islink(target_path):
+                print(f"[INFO] Removing symlink: {target_path}")
+                os.unlink(target_path)
+            elif os.path.isdir(target_path) and config.get("is_dir", False) and os.path.exists(target_path):
+                # Handle directory symlinks like nvim folder
+                print(f"[INFO] Removing directory: {target_path}")
+                shutil.rmtree(target_path)
+
+def create_symlinks():
+    """Create symlinks for all packages."""
+    print("[INFO] Creating symlinks...")
+    
+    for package, config in PACKAGES.items():
+        source_dir = os.path.join(DOTFILES_DIR, package)
+        target_dir = os.path.expanduser(config["target"])
         os.makedirs(target_dir, exist_ok=True)
         
-        # Check and backup conflicting files
-        package_dir = os.path.join(DOTFILES_DIR, package)
-        if os.path.exists(package_dir):
-            for root, dirs, files in os.walk(package_dir):
-                # Get relative path from package directory
-                rel_path = os.path.relpath(root, package_dir)
-                if rel_path == ".":
-                    rel_path = ""
+        for file in config["files"]:
+            source_path = os.path.join(source_dir, file)
+            target_path = os.path.join(target_dir, file)
+            
+            # Ensure parent directory exists
+            parent_dir = os.path.dirname(target_path)
+            os.makedirs(parent_dir, exist_ok=True)
+            
+            # Check if source exists before creating symlink
+            if not os.path.exists(source_path):
+                print(f"[ERROR] Source path does not exist: {source_path}")
+                continue
                 
-                # Process each file
-                for file in files:
-                    # Get source and target paths
-                    source_path = os.path.join(root, file)
-                    target_rel_path = os.path.join(rel_path, file)
-                    target_path = os.path.join(target_dir, target_rel_path)
-                    
-                    # If target exists and is not a symlink, back it up
-                    if os.path.exists(target_path) and not os.path.islink(target_path):
-                        backup_path = os.path.join(BACKUP_DIR, package, target_rel_path)
-                        os.makedirs(os.path.dirname(backup_path), exist_ok=True)
-                        print(f"[INFO] Backing up {target_path} to {backup_path}")
-                        shutil.move(target_path, backup_path)
-        
-        # Now stow the package
-        print(f"[INFO] Stowing package: {package} to {target_dir}")
-        run_command(f"stow -t {target_dir} {package}", verbose=False)
-    
-    print("[INFO] Stowing complete.")
+            print(f"[INFO] Creating symlink: {target_path} → {source_path}")
+            try:
+                os.symlink(source_path, target_path)
+            except FileExistsError:
+                print(f"[WARN] Target already exists: {target_path}")
 
 def commit_changes():
     """Commit changes to the dotfiles repository."""
     print("[INFO] Committing changes to Git...")
+    
+    # Check if there are changes to commit
+    status = run_command(f"cd {DOTFILES_DIR} && git status --porcelain", verbose=False)
+    if not status:
+        print("[INFO] No changes to commit.")
+        return
+        
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     run_command(f"cd {DOTFILES_DIR} && git add . && git commit -m 'Update dotfiles: {timestamp}'", verbose=False)
     print("[INFO] Changes committed.")
@@ -98,14 +133,20 @@ def main():
     
     # Update Brewfile
     update_brewfile()
-
-    # Backup and stow packages
-    backup_and_stow_packages()
-
+    
+    # Backup existing files
+    backup_existing_files()
+    
+    # Remove existing symlinks
+    remove_symlinks()
+    
+    # Create new symlinks
+    create_symlinks()
+    
     # Commit and push changes
     commit_changes()
     push_to_github()
-
+    
     print("[INFO] Dotfiles update complete.")
 
 if __name__ == "__main__":
