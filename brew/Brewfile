@@ -22,6 +22,7 @@ brew "cowsay"
 brew "pkgconf"
 brew "jack"
 brew "csound"
+brew "dos2unix"
 brew "emacs", link: false
 brew "eza"
 brew "fd"
