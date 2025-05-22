@@ -18,3 +18,9 @@ alias cv="z"
 export PATH="$HOME/.tmuxifier/bin:$PATH"
 eval "$(tmuxifier init -)"
 eval "$(thefuck --alias)"
+
+# Auto-start tmux if not already inside a tmux session
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
+    tmux attach || exec tmux new-session
+fi
+
