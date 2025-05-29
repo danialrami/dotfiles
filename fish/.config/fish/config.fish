@@ -81,3 +81,18 @@ if command -v yazi > /dev/null
     alias fm "y"
     alias files "y"
 end
+
+# Audio development shortcuts (since you work with audio tools)
+if command -v supercollider > /dev/null
+    alias sc "supercollider"
+    alias sclang "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+end
+
+# Quick script execution aliases (functions are auto-loaded from functions/)
+alias run "run_script"
+alias x "run_script"
+
+# Audio workflow aliases
+# alias audio "audio_session"
+# alias audio_dev "audio_session dev"
+# alias audio_mix "audio_session mixing"
