@@ -1,24 +1,22 @@
 #!/bin/bash
 
+# Find tmux executable
+TMUX_CMD=""
+for path in "/usr/local/bin/tmux" "/opt/homebrew/bin/tmux" "$(command -v tmux)"; do
+    if [ -x "$path" ]; then
+        TMUX_CMD="$path"
+        break
+    fi
+done
+
+# Exit if tmux not found
+if [ -z "$TMUX_CMD" ]; then
+    echo "Error: tmux not found"
+    exit 1
+fi
+
 SESSION_NAME="ghostty-main"
 
-# Check if the session already exists
-tmux has-session -t $SESSION_NAME 2>/dev/null
-
-if [ $? -eq 0 ]; then
-    # If the session exists, reattach to it
-    tmux attach-session -t $SESSION_NAME
-else
-    # If the session doesn't exist, start a new one with some default windows
-    tmux new-session -s $SESSION_NAME -d -c ~
-    
-    # Create additional windows for common tasks
-    tmux new-window -t $SESSION_NAME -n "projects" -c ~/Projects
-    tmux new-window -t $SESSION_NAME -n "dotfiles" -c ~/.dotfiles
-    
-    # Go back to the first window
-    tmux select-window -t $SESSION_NAME:1
-    
-    # Attach to the session
-    tmux attach-session -t $SESSION_NAME
-fi
+# Simple approach: try to attach, create if it fails
+$TMUX_CMD attach-session -t "$SESSION_NAME" 2>/dev/null || \
+$TMUX_CMD new-session -s "$SESSION_NAME"
