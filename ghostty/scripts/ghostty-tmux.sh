@@ -15,8 +15,13 @@ if [ -z "$TMUX_CMD" ]; then
     exit 1
 fi
 
-SESSION_NAME="ghostty-main"
+# Find the next available session number
+SESSION_NUM=1
+while $TMUX_CMD has-session -t "ghostty-$SESSION_NUM" 2>/dev/null; do
+    ((SESSION_NUM++))
+done
 
-# Simple approach: try to attach, create if it fails
-$TMUX_CMD attach-session -t "$SESSION_NAME" 2>/dev/null || \
+SESSION_NAME="ghostty-$SESSION_NUM"
+
+# Create new numbered session
 $TMUX_CMD new-session -s "$SESSION_NAME"

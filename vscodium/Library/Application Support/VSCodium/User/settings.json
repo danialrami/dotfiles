@@ -30,18 +30,18 @@
           "args": ["-l"]
         },
         "fish": {
-          "path": "/usr/bin/fish",
+          "path": "/usr/local/bin/fish",
           "args": ["-l"],
           "icon": "terminal"
         },
         "fish-tmux-workspace": {
           "path": "tmux",
-          "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}", "/usr/bin/fish"],
+          "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}", "/usr/local/bin/fish"],
           "icon": "terminal-tmux"
         },
         "fish-tmux-main": {
           "path": "tmux",
-          "args": ["new-session", "-A", "-s", "main", "/usr/bin/fish"],
+          "args": ["new-session", "-A", "-s", "main", "/usr/local/bin/fish"],
           "icon": "terminal-tmux"
         },
         "tmux-workspace": {
