@@ -1,0 +1,32 @@
+# Font and background settings
+font-family = "Victor Mono"
+font-size = 12
+
+# Disable quit confirmation
+confirm-close-surface = false
+
+# Catppuccin Mocha color scheme
+foreground = #cdd6f4
+background = #1e1e2e
+selection-foreground = #1e1e2e
+selection-background = #f5e0dc
+cursor-color = #f5e0dc
+
+# Smart tmux startup script
+command = ~/.dotfiles/ghostty/scripts/ghostty-tmux.sh
+
+# macOS appearance customization
+macos-titlebar-style = "transparent"
+macos-option-as-alt = true
+macos-titlebar-proxy-icon = "hidden"
+
+# Performance and visual enhancements
+background-opacity = 0.98
+mouse-hide-while-typing = true
+window-inherit-working-directory = false
+working-directory = home
+
+# Custom keybindings
+keybind = global:cmd+`=toggle_quick_terminal
+keybind = shift+ctrl+left_bracket=previous_tab
+keybind = shift+ctrl+right_bracket=next_tab

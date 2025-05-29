@@ -1,0 +1,51 @@
+{
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "editor.accessibilitySupport": "off",
+    "workbench.startupEditor": "none",
+    
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "git.openRepositoryInParentFolders": "always",
+    "git.autoRepositoryDetection": false,
+    
+    "vscode-neovim.neovimExecutablePaths.darwin": "/usr/local/bin/nvim",
+    "vscode-neovim.compositeKeys": {},
+    "vscode-neovim.useCtrlKeysForInsertMode": false,
+    "vscode-neovim.useCtrlKeysForNormalMode": false,
+    
+    "workbench.colorTheme": "Catppuccin Mocha",
+    "workbench.iconTheme": "catppuccin-mocha",
+    "security.workspace.trust.untrustedFiles": "open",
+    
+    "terminal.external.osxExec": "Ghostty.app",
+    "terminal.integrated.defaultProfile.osx": "tmux-workspace",
+    "terminal.integrated.profiles.osx": {
+        "zsh": {
+            "path": "/bin/zsh",
+            "args": ["-l"]
+        },
+        "bash": {
+            "path": "/bin/bash",
+            "args": ["-l"]
+        },
+        "tmux-workspace": {
+            "path": "tmux",
+            "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}"],
+            "icon": "terminal-tmux"
+        },
+        "tmux-main": {
+            "path": "tmux",
+            "args": ["new-session", "-A", "-s", "main"],
+            "icon": "terminal-tmux"
+        }
+    },
+    "terminal.integrated.fontFamily": "Victor Mono, MesloLGS Nerd Font Mono, Symbols Nerd Font Mono",
+    "editor.fontFamily": "Victor Mono, MesloLGS Nerd Font Mono, Symbols Nerd Font Mono",
+    
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    
+    "application.shellEnvironmentResolutionTimeout": 30
+}
