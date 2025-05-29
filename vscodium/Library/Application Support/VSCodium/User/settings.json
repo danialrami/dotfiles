@@ -19,27 +19,42 @@
     "security.workspace.trust.untrustedFiles": "open",
     
     "terminal.external.osxExec": "Ghostty.app",
-    "terminal.integrated.defaultProfile.osx": "tmux-workspace",
+    "terminal.integrated.defaultProfile.osx": "fish-tmux-workspace",
     "terminal.integrated.profiles.osx": {
         "zsh": {
-            "path": "/bin/zsh",
-            "args": ["-l"]
+          "path": "/bin/zsh",
+          "args": ["-l"]
         },
         "bash": {
-            "path": "/bin/bash",
-            "args": ["-l"]
+          "path": "/bin/bash",
+          "args": ["-l"]
+        },
+        "fish": {
+          "path": "/usr/bin/fish",
+          "args": ["-l"],
+          "icon": "terminal"
+        },
+        "fish-tmux-workspace": {
+          "path": "tmux",
+          "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}", "/usr/bin/fish"],
+          "icon": "terminal-tmux"
+        },
+        "fish-tmux-main": {
+          "path": "tmux",
+          "args": ["new-session", "-A", "-s", "main", "/usr/bin/fish"],
+          "icon": "terminal-tmux"
         },
         "tmux-workspace": {
-            "path": "tmux",
-            "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}"],
-            "icon": "terminal-tmux"
+          "path": "tmux",
+          "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}"],
+          "icon": "terminal-tmux"
         },
         "tmux-main": {
-            "path": "tmux",
-            "args": ["new-session", "-A", "-s", "main"],
-            "icon": "terminal-tmux"
+          "path": "tmux",
+          "args": ["new-session", "-A", "-s", "main"],
+          "icon": "terminal-tmux"
         }
-    },
+      }, 
     "terminal.integrated.fontFamily": "Victor Mono, MesloLGS Nerd Font Mono, Symbols Nerd Font Mono",
     "editor.fontFamily": "Victor Mono, MesloLGS Nerd Font Mono, Symbols Nerd Font Mono",
     
