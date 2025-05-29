@@ -36,7 +36,7 @@
         },
         "fish-tmux-workspace": {
           "path": "tmux",
-          "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}", "/usr/local/bin/fish"],
+          "args": ["new-session", "-A", "-s", "vscodium:${workspaceFolderBasename}", "/usr/local/bin/fish"],
           "icon": "terminal-tmux"
         },
         "fish-tmux-main": {
