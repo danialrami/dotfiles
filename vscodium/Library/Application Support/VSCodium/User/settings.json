@@ -46,7 +46,7 @@
         },
         "tmux-workspace": {
           "path": "tmux",
-          "args": ["new-session", "-A", "-s", "vscode:${workspaceFolderBasename}"],
+          "args": ["new-session", "-A", "-s", "vscodium:${workspaceFolderBasename}"],
           "icon": "terminal-tmux"
         },
         "tmux-main": {
