@@ -19,8 +19,10 @@ export PATH="$HOME/.tmuxifier/bin:$PATH"
 eval "$(tmuxifier init -)"
 eval "$(thefuck --alias)"
 
-# Auto-start tmux if not already inside a tmux session
-if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
+# Auto-start tmux if not already inside a tmux session AND not in VSCode
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -z "$VSCODE_INJECTION" ]] && [[ -z "$VSCODE_SHELL_LOGIN" ]]; then
     tmux attach || exec tmux new-session
 fi
 
+export PATH="/usr/local/opt/util-linux/bin:$PATH"
+export PATH="/usr/local/opt/util-linux/sbin:$PATH"

@@ -5,25 +5,27 @@ return {
       require("mason").setup()
     end
   },
+  
   {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
-          "lua_ls",        -- Lua
-          "pyright",       -- Python
-          -- "ts-ls",      -- JavaScript/TypeScript
+          "lua_ls", -- Lua
+          "pyright", -- Python
+          -- "ts_ls", -- JavaScript/TypeScript
           "rust_analyzer", -- Rust
-          "cssls",         -- CSS
-          "html",          -- HTML
-          "jsonls",        -- JSON
-          "tailwindcss",   -- Tailwind CSS
-          -- "gopls",      -- Go (commented out)
-          "clangd",        -- C/C++
+          "cssls", -- CSS
+          "html", -- HTML
+          "jsonls", -- JSON
+          "tailwindcss", -- Tailwind CSS
+          -- "gopls", -- Go (commented out)
+          "clangd", -- C/C++
         }
       })
     end
   },
+  
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -32,11 +34,10 @@ return {
     },
     config = function()
       local lspconfig = require("lspconfig")
-      
       -- LSP Configurations
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       
-      -- Configure servers
+      -- Configure Lua LSP
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         settings = {
@@ -47,22 +48,26 @@ return {
           }
         }
       })
-
+      
       -- Configure other servers
       local servers = {
-        "pyright", -- "tsserver", 
-        "rust_analyzer", "cssls", 
-        "html", "jsonls", "tailwindcss", 
-        -- "gopls", 
+        "pyright", 
+        -- "tsserver",
+        "rust_analyzer", 
+        "cssls",
+        "html", 
+        "jsonls", 
+        "tailwindcss",
+        -- "gopls",
         "clangd"
-      }      
+      }
       
       for _, server in ipairs(servers) do
         lspconfig[server].setup({
           capabilities = capabilities,
         })
       end
-
+      
       -- LSP Keybindings
       vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
@@ -73,6 +78,7 @@ return {
       vim.keymap.set('n', ']d', vim.diagnostic.goto_next, {})
     end
   },
+  
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -109,6 +115,7 @@ return {
       })
     end
   },
+  
   {
     "j-hui/fidget.nvim",
     tag = "legacy",

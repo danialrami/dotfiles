@@ -24,3 +24,18 @@ vim.opt.wrap = true         -- enable line wrapping
 vim.opt.linebreak = true    -- wrap at word boundaries
 vim.opt.textwidth = 0       -- prevent hard wrapping
 vim.opt.wrapmargin = 0      -- prevent automatic line breaks
+
+if vim.g.vscode then
+    -- VSCode extension specific settings
+    vim.opt.cmdheight = 0
+    vim.opt.laststatus = 0
+    vim.opt.showmode = false
+    
+    -- Disable some plugins that conflict with VSCode
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+else
+    -- Regular Neovim settings
+    vim.opt.cmdheight = 1
+    vim.opt.laststatus = 2
+end

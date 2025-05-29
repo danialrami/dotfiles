@@ -19,7 +19,7 @@ source ~/.dotfiles/shared/fabric_aliases.sh
 source ~/.dotfiles/shared/go_env.sh
 source ~/.dotfiles/shared/secure_env.sh
 
-eval "$(starship init zsh)"
+#eval "$(starship init zsh)"
 export EZA_ICONS_AUTO=1
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
