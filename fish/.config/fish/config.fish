@@ -97,4 +97,5 @@ alias x "run_script"
 # alias audio_dev "audio_session dev"
 # alias audio_mix "audio_session mixing"
 
-alias codium "/Applications/VSCodium.app/Contents/Resources/app/bin/codium"
+# vscodium not needed since I added a symlink
+# alias codium "/Applications/VSCodium.app/Contents/Resources/app/bin/codium"
