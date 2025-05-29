@@ -19,7 +19,7 @@
     "security.workspace.trust.untrustedFiles": "open",
     
     "terminal.external.osxExec": "Ghostty.app",
-    "terminal.integrated.defaultProfile.osx": "fish-tmux-workspace",
+    "terminal.integrated.defaultProfile.osx": "tmux-workspace",
     "terminal.integrated.profiles.osx": {
         "zsh": {
           "path": "/bin/zsh",
