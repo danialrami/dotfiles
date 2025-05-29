@@ -21,7 +21,7 @@ macos-option-as-alt = true
 macos-titlebar-proxy-icon = "hidden"
 
 # Performance and visual enhancements
-background-opacity = 0.98
+# background-opacity = 0.98
 mouse-hide-while-typing = true
 window-inherit-working-directory = false
 working-directory = home
