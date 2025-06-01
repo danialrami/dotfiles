@@ -115,6 +115,15 @@ if command -v yazi > /dev/null
     alias files "y"
 end
 
+# Add Node.js to PATH explicitly for LSP compatibility
+set -gx PATH /usr/bin $PATH
+set -gx NODE_PATH /usr/lib/node_modules
+
+# Ensure npm global packages are in PATH
+if test -d ~/.npm-global/bin
+    set -gx PATH ~/.npm-global/bin $PATH
+end
+
 # Audio development shortcuts (Arch paths)
 if command -v sclang > /dev/null
     alias sc "sclang"
