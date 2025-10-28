@@ -1,0 +1,60 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "catppuccin",
+  "model": "anthropic/claude-haiku-4-5-20251001",
+  "provider": {
+  //    "ollama": {
+  //      "npm": "@ai-sdk/openai-compatible",
+  //      "name": "ollama",
+  //      "options": {
+  //        "baseURL": "http://127.0.0.1:11434/v1"
+  //      },
+  //      "models": {
+  //        "gpt-oss:latest": {
+  //          "name": "gpt-oss:latest"
+  //        },
+  //        "qwen3-coder:30b": {
+  //          "name": "qwen3-coder:30b"
+  //        }
+  //      }
+  //    },
+      "lmstudio": {
+        "npm": "@ai-sdk/openai-compatible",
+        "name": "lmstudio",
+        "options": {
+          "baseURL": "http://127.0.0.1:1234/v1"
+        },
+        "models": {
+          "qwen/qwen3-vl-30b": {
+            "name": "qwen/qwen3-vl-30b"
+          }, 
+          "qwen/qwen3-coder-30b": {
+            "name": "qwen/qwen3-coder-30b"
+          },
+          "openai/gpt-oss-20b": {
+            "name": "openai/gpt-oss-20b"
+          }
+        }
+      }
+    },
+    "agent": {
+      "build": {
+        "model": "lmstudio/openai/gpt-oss-20b"
+      },
+      "plan": {
+        "model": "lmstudio/openai/gpt-oss-20b"
+      }
+    },
+  "mcp": {
+    "MCP_DOCKER": {
+      "type": "local",
+      "command": ["docker", "mcp", "gateway", "run"],
+      "enabled": true
+    },
+    "browserOS": {
+      "type": "local",
+      "command": ["npx", "@agent-infra/mcp-server-browser@latest"],
+      "enabled": true
+    }
+  }
+}
