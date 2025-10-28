@@ -1,9 +1,7 @@
 #!/usr/bin/env fish
 
 if command -v starship > /dev/null
-    source ~/.dotfiles/scripts/detect-env.sh
-    bash ~/.dotfiles/scripts/load-starship-config.sh
-    
+    source ~/.dotfiles/scripts/load-starship-config.fish
     starship init fish | source
 end
 
