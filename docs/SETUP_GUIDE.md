@@ -80,29 +80,42 @@ bun install
 
 ## Automation Scripts
 
-### Backup & Sync (backup-dotfiles.py)
-Updated to handle opencode automatically:
-```python
-"opencode": {"files": [".config/opencode"], "target": "~", "is_dir": True}
-```
+All Python scripts run in an isolated virtual environment (`.venv/`) for reproducible builds across machines.
 
-Run with:
+### Backup & Sync (backup-dotfiles.sh)
+Orchestrator script that manages venv and runs the Python backup script:
 ```bash
 cd ~/.dotfiles
-python3 backup-dotfiles.py
-```
-
-### Restore on New Machine (restore-dotfiles.py)
-Updated to include opencode in the stow packages list:
-```bash
-python3 ~/.dotfiles/restore-dotfiles.py
+./backup-dotfiles.sh
 ```
 
 This will:
-1. Clone your dotfiles repo
-2. Install Homebrew packages
-3. Create symlinks for all packages (including opencode)
-4. You then run: `cd ~/.config/opencode && bun install`
+1. Create/activate virtual environment
+2. Update Homebrew's Brewfile (macOS only)
+3. Backup existing files before symlinking
+4. Create symlinks for all platform-appropriate packages
+5. Commit changes locally
+6. Print reminder to manually push to GitHub
+
+### Restore on New Machine (restore-dotfiles.sh)
+Orchestrator script for initial setup on a new machine:
+```bash
+cd ~/.dotfiles
+./restore-dotfiles.sh
+```
+
+This will:
+1. Create/activate virtual environment
+2. Clone your dotfiles repo (if not already present)
+3. Install Homebrew (macOS only)
+4. Restore Homebrew packages from Brewfile (macOS only)
+5. Create symlinks for all platform-appropriate packages
+6. Then run: `cd ~/.config/opencode && bun install`
+
+### Why Virtual Environment?
+- **Reproducible**: Same Python environment on all machines
+- **Isolated**: No conflicts with system Python or other tools
+- **Minimal**: requirements.txt contains exactly what's needed
 
 ## Common Tasks
 
@@ -119,8 +132,8 @@ git push
 # Clone dotfiles
 git clone <your-repo> ~/.dotfiles
 
-# Run restoration
-python3 ~/.dotfiles/restore-dotfiles.py
+# Run restoration (sets up venv automatically)
+~/.dotfiles/restore-dotfiles.sh
 
 # Install dependencies
 cd ~/.config/opencode
@@ -210,6 +223,10 @@ stow -t ~ opencode --adopt
 
 ## Questions?
 
-Reference the backup/restore scripts for exact stow commands:
-- `~/.dotfiles/backup-dotfiles.py` - Manual backup workflow
-- `~/.dotfiles/restore-dotfiles.py` - Automatic restoration setup
+Reference the backup/restore scripts:
+- `~/.dotfiles/backup-dotfiles.sh` - Orchestrator for backup (manages venv)
+- `~/.dotfiles/restore-dotfiles.sh` - Orchestrator for restoration (manages venv)
+- `~/.dotfiles/backup-dotfiles.py` - Actual backup logic (called by .sh)
+- `~/.dotfiles/restore-dotfiles.py` - Actual restoration logic (called by .sh)
+- `~/.dotfiles/requirements.txt` - Python dependencies (currently empty, stdlib only)
+- `~/.dotfiles/.venv/` - Virtual environment (created automatically on first run)

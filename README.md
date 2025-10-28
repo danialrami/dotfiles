@@ -15,21 +15,14 @@ Unified dotfiles for cross-platform development environments on macOS (klaxon) a
 
 ## ⚡ Quick Start
 
-### macOS
+### macOS or Arch Linux
 ```bash
 git clone https://github.com/yourusername/dotfiles ~/.dotfiles
 cd ~/.dotfiles
-python3 restore-dotfiles.py
+./restore-dotfiles.sh  # Orchestrator creates venv and runs setup
 ```
 
-### Arch Linux
-```bash
-git clone https://github.com/yourusername/dotfiles ~/.dotfiles
-cd ~/.dotfiles
-python3 restore-dotfiles.py
-```
-
-Platform-specific configs load automatically!
+Platform-specific configs load automatically! The `.sh` scripts manage a virtual environment (`.venv/`) for reproducible Python execution.
 
 ## 📚 Documentation
 
@@ -87,6 +80,8 @@ No manual configuration needed!
 - Nerd Font (for terminal)
 - macOS 10.15+ or Linux (Arch/Ubuntu/Fedora)
 
+**Note**: All Python dependencies are managed in an isolated virtual environment (`.venv/`). The orchestrator scripts (`.sh`) create and activate this automatically on first run.
+
 ## 📋 Contents
 
 ```
@@ -95,6 +90,12 @@ No manual configuration needed!
 ├── docs/                     ← Full documentation
 ├── scripts/                  ← Platform detection & helpers
 ├── tests/                    ← 34 comprehensive tests
+├── .venv/                    ← Virtual environment (created on first run)
+├── requirements.txt          ← Python dependencies (stdlib only)
+├── backup-dotfiles.sh        ← Orchestrator: backup with venv
+├── restore-dotfiles.sh       ← Orchestrator: restore with venv
+├── backup-dotfiles.py        ← Backup logic
+├── restore-dotfiles.py       ← Restore logic
 ├── starship/                 ← Terminal prompt configs
 ├── fish/                     ← Fish shell configs
 ├── neovim/                   ← Editor configuration
@@ -111,15 +112,23 @@ No manual configuration needed!
 ```bash
 git clone https://github.com/yourusername/dotfiles ~/.dotfiles
 cd ~/.dotfiles
-python3 restore-dotfiles.py
-source ~/.dotfiles/scripts/init-nvim-lockfile.sh  # neovim setup
+./restore-dotfiles.sh  # Creates venv, clones repo, stows packages
 ```
 
-### Updates
+### Updates & Backup
 ```bash
 cd ~/.dotfiles
-git pull origin main
-python3 backup-dotfiles.py  # auto-detects platform
+./backup-dotfiles.sh  # Auto-detects platform, commits changes locally
+git push               # Manually push to GitHub
+```
+
+### Manual Python Calls (Advanced)
+If needed, run Python scripts directly within the venv:
+```bash
+cd ~/.dotfiles
+source .venv/bin/activate
+python3 backup-dotfiles.py
+# Or just use the orchestrator: ./backup-dotfiles.sh
 ```
 
 ## 🤝 Supported Machines
