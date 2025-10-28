@@ -136,9 +136,10 @@ class TestConfigurationModularity(unittest.TestCase):
         """Test that starship config variants exist"""
         starship_dir = Path(os.path.expanduser("~/.dotfiles/starship"))
         
-        self.assertTrue((starship_dir / "starship.toml").exists())
+        self.assertTrue((starship_dir / ".config" / "starship.toml").exists())
         self.assertTrue((starship_dir / "starship.common.toml").exists())
         self.assertTrue((starship_dir / "starship.darwin.toml").exists())
+        self.assertTrue((starship_dir / "starship.arch.toml").exists())
 
     def test_fish_modular_config(self):
         """Test that fish has modular conf.d structure"""
