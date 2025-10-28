@@ -3,14 +3,18 @@
 import os
 import subprocess
 import shutil
+import sys
 from datetime import datetime
+from pathlib import Path
 
-# Define paths and commands
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "scripts"))
+
+from detect_env import EnvironmentDetector
+
 DOTFILES_DIR = os.path.expanduser("~/.dotfiles")
 BREWFILE_PATH = os.path.join(DOTFILES_DIR, "brew/Brewfile")
 BACKUP_DIR = os.path.expanduser("~/dotfiles-backup")
 
-# Explicitly define each package's mapping (source → target)
 PACKAGES = {
     "bash": {"files": [".bashrc"], "target": "~"},
     "zsh": {"files": [".zshrc"], "target": "~"},
@@ -19,7 +23,11 @@ PACKAGES = {
     "brew": {"files": ["Brewfile"], "target": "~"},
     "starship": {"files": ["starship.toml"], "target": "~/.config"},
     "neovim": {"files": [".config/nvim"], "target": "~", "is_dir": True},
-    "opencode": {"files": [".config/opencode"], "target": "~", "is_dir": True}
+    "opencode": {"files": [".config/opencode"], "target": "~", "is_dir": True},
+    "fish": {"files": [".config/fish"], "target": "~", "is_dir": True},
+    "ghostty": {"files": ["Library/Application Support"], "target": "~", "is_dir": True},
+    "vscodium": {"files": ["Library/Application Support"], "target": "~", "is_dir": True},
+    "nushell": {"files": [".config/nushell"], "target": "~", "is_dir": True},
 }
 
 def run_command(command, verbose=True):
@@ -39,87 +47,80 @@ def update_brewfile():
     run_command(f"brew bundle dump --force --file={BREWFILE_PATH}", verbose=False)
     print("[INFO] Brewfile updated.")
 
-def backup_existing_files():
+def get_platform_specific_packages(detector):
+    """Return packages relevant to the current platform."""
+    os_type = detector.detect_os()
+    
+    if os_type == "darwin":
+        return ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim", "opencode", "fish", "ghostty", "vscodium"]
+    elif os_type == "linux":
+        return ["bash", "zsh", "tmux", "starship", "neovim", "opencode", "fish", "nushell"]
+    else:
+        return list(PACKAGES.keys())
+
+def backup_existing_files(detector):
     """Backup existing files that will be replaced by symlinks."""
     print("[INFO] Backing up existing files...")
     os.makedirs(BACKUP_DIR, exist_ok=True)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_subdir = os.path.join(BACKUP_DIR, f"backup_{timestamp}")
+    backup_subdir = os.path.join(BACKUP_DIR, f"backup_{timestamp}_{detector.detect_distro()}")
     os.makedirs(backup_subdir, exist_ok=True)
     
-    for package, config in PACKAGES.items():
+    packages_to_backup = get_platform_specific_packages(detector)
+    
+    for package in packages_to_backup:
+        if package not in PACKAGES:
+            continue
+            
+        config = PACKAGES[package]
         target_dir = os.path.expanduser(config["target"])
         for file in config["files"]:
             target_path = os.path.join(target_dir, file)
             backup_path = os.path.join(backup_subdir, package, file)
             
             if os.path.exists(target_path) and not os.path.islink(target_path):
-                # Create parent directories for backup
                 os.makedirs(os.path.dirname(backup_path), exist_ok=True)
                 print(f"[INFO] Backing up {target_path} to {backup_path}")
                 try:
-                    shutil.copy2(target_path, backup_path) if os.path.isfile(target_path) else \
-                    shutil.copytree(target_path, backup_path)
+                    if os.path.isfile(target_path):
+                        shutil.copy2(target_path, backup_path)
+                    else:
+                        shutil.copytree(target_path, backup_path)
                 except Exception as e:
                     print(f"[WARN] Failed to backup {target_path}: {e}")
 
-def remove_symlinks():
-    """Remove existing symlinks for all packages."""
-    print("[INFO] Removing existing symlinks...")
+def create_symlinks_with_stow(detector):
+    """Create symlinks using GNU stow."""
+    print("[INFO] Creating symlinks with stow...")
     
-    for package, config in PACKAGES.items():
-        target_dir = os.path.expanduser(config["target"])
-        for file in config["files"]:
-            target_path = os.path.join(target_dir, file)
-            if os.path.islink(target_path):
-                print(f"[INFO] Removing symlink: {target_path}")
-                os.unlink(target_path)
-            elif os.path.isdir(target_path) and config.get("is_dir", False) and os.path.exists(target_path):
-                # Handle directory symlinks like nvim folder
-                print(f"[INFO] Removing directory: {target_path}")
-                shutil.rmtree(target_path)
-
-def create_symlinks():
-    """Create symlinks for all packages."""
-    print("[INFO] Creating symlinks...")
+    packages_to_stow = get_platform_specific_packages(detector)
     
-    for package, config in PACKAGES.items():
-        source_dir = os.path.join(DOTFILES_DIR, package)
-        target_dir = os.path.expanduser(config["target"])
-        os.makedirs(target_dir, exist_ok=True)
-        
-        for file in config["files"]:
-            source_path = os.path.join(source_dir, file)
-            target_path = os.path.join(target_dir, file)
-            
-            # Ensure parent directory exists
-            parent_dir = os.path.dirname(target_path)
-            os.makedirs(parent_dir, exist_ok=True)
-            
-            # Check if source exists before creating symlink
-            if not os.path.exists(source_path):
-                print(f"[ERROR] Source path does not exist: {source_path}")
-                continue
-                
-            print(f"[INFO] Creating symlink: {target_path} → {source_path}")
-            try:
-                os.symlink(source_path, target_path)
-            except FileExistsError:
-                print(f"[WARN] Target already exists: {target_path}")
+    for package in packages_to_stow:
+        target_dir = PACKAGES.get(package, {}).get("target", "~")
+        target_dir_expanded = os.path.expanduser(target_dir)
+        command = f"cd {DOTFILES_DIR} && stow -t {target_dir_expanded} {package} --adopt"
+        print(f"[INFO] Running: stow -t {target_dir_expanded} {package}")
+        try:
+            run_command(command, verbose=False)
+        except Exception as e:
+            print(f"[WARN] Stow failed for {package}: {e}")
 
-def commit_changes():
+def commit_changes(detector):
     """Commit changes to the dotfiles repository."""
     print("[INFO] Committing changes to Git...")
     
-    # Check if there are changes to commit
     status = run_command(f"cd {DOTFILES_DIR} && git status --porcelain", verbose=False)
     if not status:
         print("[INFO] No changes to commit.")
         return
         
+    os_type = detector.detect_os()
+    distro = detector.detect_distro()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    run_command(f"cd {DOTFILES_DIR} && git add . && git commit -m 'Update dotfiles: {timestamp}'", verbose=False)
+    message = f"Update dotfiles ({distro}): {timestamp}"
+    
+    run_command(f"cd {DOTFILES_DIR} && git add . && git commit -m '{message}'", verbose=False)
     print("[INFO] Changes committed.")
 
 def push_to_github():
@@ -130,22 +131,17 @@ def push_to_github():
 
 def main():
     """Main function to update dotfiles."""
-    print("[INFO] Starting dotfiles update...")
+    detector = EnvironmentDetector()
+    os_type, distro, hostname = detector.detect()
     
-    # Update Brewfile
-    update_brewfile()
+    print(f"[INFO] Starting dotfiles update for {distro} on {hostname}...")
     
-    # Backup existing files
-    backup_existing_files()
+    if os_type == "darwin":
+        update_brewfile()
     
-    # Remove existing symlinks
-    remove_symlinks()
-    
-    # Create new symlinks
-    create_symlinks()
-    
-    # Commit and push changes
-    commit_changes()
+    backup_existing_files(detector)
+    create_symlinks_with_stow(detector)
+    commit_changes(detector)
     push_to_github()
     
     print("[INFO] Dotfiles update complete.")
