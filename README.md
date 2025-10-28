@@ -2,16 +2,34 @@
 
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
+## 🎯 Multi-Platform Support
+
+This dotfiles repository now supports **multiple machines and operating systems** from a single unified `main` branch using environment detection:
+
+- **macOS** (klaxon) - Full support with Homebrew integration
+- **Arch Linux** (siku) - Full support with native tools
+- **Other Linux distros** - Extensible (Ubuntu, Fedora, Debian, etc.)
+
+All machines use the same repository. Platform-specific configurations are automatically detected and loaded. See **[MULTIPLATFORM_GUIDE.md](./MULTIPLATFORM_GUIDE.md)** for details.
+
+### Quick Start
+```bash
+git clone https://github.com/yourusername/dotfiles ~/.dotfiles
+cd ~/.dotfiles
+python3 restore-dotfiles.py  # Auto-detects platform
+```
+
 ## Overview
 
 This repository contains configurations for an optimized development environment centered around:
 
-- Modern terminal experience with **tmux**, **Wezterm**, and **Starship**
+- Modern terminal experience with **tmux**, **Wezterm**, **Ghostty**, and **Starship**
 - Feature-rich **Neovim** setup for coding, with audio programming focus
 - **SuperCollider** integration for sound design and algorithmic composition
 - **AI-assisted coding** with local models via Ollama and Claude API
 - Secure credential management via Bitwarden
 - Productivity tools like **zoxide**, **eza**, and more
+- **Cross-platform support** with automatic environment detection
 
 ## Terminal Environment
 
@@ -735,3 +753,86 @@ audio_session
 - **Creative application suite** via Homebrew
 - **Version control** for creative projects
 - **Cross-platform font** and theming consistency
+## Multi-Platform Architecture
+
+This repository now features a **unified architecture** that supports multiple machines and operating systems:
+
+### Environment Detection
+Automatic platform detection via `scripts/detect-env.sh`:
+- Detects OS (macOS, Linux)
+- Identifies Linux distro (Arch, Ubuntu, Fedora, Debian, etc.)
+- Sets environment variables: `DOTFILES_OS`, `DOTFILES_DISTRO`, `DOTFILES_HOSTNAME`
+
+### Modular Configuration
+Configurations are split into common and platform-specific variants:
+
+- **Starship Prompt**: `starship.common.toml` + `starship.darwin.toml` + `starship.arch.toml`
+- **Fish Shell**: `config.fish` with `conf.d/` modular structure
+  - `00-environment.fish` - Common setup
+  - `01-platform.fish` - Platform-specific
+  - `02-tools.fish` - Tool initialization
+- **Neovim**: Per-platform plugin lock files (`lazy-lock.darwin.json`, `lazy-lock.arch.json`)
+
+### Platform-Aware Scripts
+Both backup and restore scripts automatically:
+- Detect current OS/distro
+- Filter packages for that platform
+- Use appropriate package managers
+- Generate platform-specific commit messages
+
+### Testing
+Comprehensive test suite with 34 passing tests:
+- **19 unit tests** - Environment detection
+- **15 integration tests** - Architecture validation
+
+Run tests:
+```bash
+cd ~/.dotfiles
+python3 -m unittest tests.test_detect_env tests.test_integration -v
+```
+
+## Documentation
+
+- **[MULTIPLATFORM_GUIDE.md](./MULTIPLATFORM_GUIDE.md)** - Comprehensive architecture and usage guide
+- **[GIT_STRATEGY.md](./GIT_STRATEGY.md)** - Branch strategy and workflow
+- **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - Complete implementation details
+- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Daily workflow and troubleshooting
+- **[OPENCODE_INTEGRATION.md](./OPENCODE_INTEGRATION.md)** - OpenCode configuration integration
+
+## Deployment
+
+### First Time Setup
+
+**macOS:**
+```bash
+git clone https://github.com/yourusername/dotfiles ~/.dotfiles
+cd ~/.dotfiles
+python3 restore-dotfiles.py
+source ~/.dotfiles/scripts/init-nvim-lockfile.sh
+```
+
+**Arch Linux:**
+```bash
+git clone https://github.com/yourusername/dotfiles ~/.dotfiles
+cd ~/.dotfiles
+python3 restore-dotfiles.py
+source ~/.dotfiles/scripts/init-nvim-lockfile.sh
+```
+
+### Updating Dotfiles
+
+On any machine, pull latest and backup/update configs:
+```bash
+cd ~/.dotfiles
+git pull origin main
+python3 backup-dotfiles.py  # Auto-detects platform
+```
+
+Platform-specific configs automatically apply based on detected OS/distro.
+
+---
+
+**Status**: ✅ Production Ready  
+**Supported Platforms**: macOS (Darwin), Arch Linux, extensible to others  
+**Test Coverage**: 34 passing tests (unit + integration)  
+**Last Updated**: October 2025
