@@ -1,25 +1,38 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import subprocess
-from datetime import datetime
 
-# Define paths and commands
-DOTFILES_REPO = "https://github.com/danialrami/dotfiles"  # Replace with your repo URL
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "scripts"))
+
+from detect_env import EnvironmentDetector
+
+DOTFILES_REPO = "https://github.com/danialrami/dotfiles"
 DOTFILES_DIR = os.path.expanduser("~/.dotfiles")
 BREWFILE_PATH = os.path.join(DOTFILES_DIR, "brew/Brewfile")
-STOW_PACKAGES = ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim", "opencode"]
-CONFIG_TARGETS = {
+
+STOW_PACKAGES = {
+    "bash": "~",
+    "zsh": "~",
+    "tmux": "~",
+    "wezterm": "~",
+    "brew": "~",
     "starship": "~/.config",
     "neovim": "~/.config",
     "opencode": "~/.config",
+    "fish": "~/.config",
+    "ghostty": "~",
+    "vscodium": "~",
+    "nushell": "~/.config",
 }
 
 def run_command(command):
     """Run a shell command and return its output."""
     try:
         result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
-        print(result.stdout.strip())
+        if result.stdout:
+            print(result.stdout.strip())
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {command}\n{e}")
@@ -37,44 +50,71 @@ def clone_dotfiles():
 def install_homebrew():
     """Install Homebrew if it's not already installed."""
     print("[INFO] Checking for Homebrew installation...")
-    if run_command("which brew") is None:
+    result = run_command("which brew")
+    if result is None or result == "":
         print("[INFO] Installing Homebrew...")
-        run_command('/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"')
+        run_command(
+            '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        )
     else:
         print("[INFO] Homebrew is already installed.")
 
-def restore_brewfile():
-    """Restore applications from the Brewfile."""
+def restore_brewfile(detector):
+    """Restore applications from the Brewfile if on macOS."""
+    os_type = detector.detect_os()
+    
+    if os_type != "darwin":
+        print("[INFO] Skipping Brewfile restore (not on macOS)")
+        return
+    
     print("[INFO] Restoring applications from Brewfile...")
     run_command(f"brew bundle --file={BREWFILE_PATH}")
 
-def stow_packages():
-    """Stow all defined packages."""
+def get_platform_packages(detector):
+    """Return packages relevant to the current platform."""
+    os_type = detector.detect_os()
+    
+    if os_type == "darwin":
+        return ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim", "opencode", "fish", "ghostty", "vscodium"]
+    elif os_type == "linux":
+        return ["bash", "zsh", "tmux", "starship", "neovim", "opencode", "fish", "nushell"]
+    else:
+        return list(STOW_PACKAGES.keys())
+
+def stow_packages(detector):
+    """Stow all defined packages for the current platform."""
     print("[INFO] Stowing packages...")
-    for package in STOW_PACKAGES:
-        target_dir = CONFIG_TARGETS.get(package, "~")
-        command = f"stow -t {os.path.expanduser(target_dir)} {package}"
-        print(f"[INFO] Running: {command}")
-        run_command(command)
+    
+    packages_to_stow = get_platform_packages(detector)
+    
+    for package in packages_to_stow:
+        if package not in STOW_PACKAGES:
+            continue
+            
+        target_dir = STOW_PACKAGES[package]
+        target_dir_expanded = os.path.expanduser(target_dir)
+        command = f"cd {DOTFILES_DIR} && stow -t {target_dir_expanded} {package}"
+        print(f"[INFO] Running: stow -t {target_dir_expanded} {package}")
+        result = run_command(command)
+        if result is None:
+            print(f"[WARN] Stow may have failed for {package}")
+    
     print("[INFO] Stowing complete.")
 
 def main():
     """Main function to restore dotfiles and environment."""
-    print("[INFO] Starting dotfiles restoration...")
+    detector = EnvironmentDetector()
+    os_type, distro, hostname = detector.detect()
+    
+    print(f"[INFO] Starting dotfiles restoration for {distro} on {hostname}...")
 
-    # Clone dotfiles repository
     clone_dotfiles()
-
-    # Install Homebrew
     install_homebrew()
-
-    # Restore Brewfile
-    restore_brewfile()
-
-    # Stow packages
-    stow_packages()
+    restore_brewfile(detector)
+    stow_packages(detector)
 
     print("[INFO] Dotfiles restoration complete.")
+    print(f"[INFO] Environment: OS={os_type}, Distro={distro}, Hostname={hostname}")
 
 if __name__ == "__main__":
     main()
