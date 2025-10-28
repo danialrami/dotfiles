@@ -92,10 +92,10 @@ No manual configuration needed!
 ├── tests/                    ← 34 comprehensive tests
 ├── .venv/                    ← Virtual environment (created on first run)
 ├── requirements.txt          ← Python dependencies (stdlib only)
-├── backup-dotfiles.sh        ← Orchestrator: backup with venv
-├── restore-dotfiles.sh       ← Orchestrator: restore with venv
-├── backup-dotfiles.py        ← Backup logic
-├── restore-dotfiles.py       ← Restore logic
+├── backup-dotfiles.sh        ← **Use this**: Backup with venv management
+├── restore-dotfiles.sh       ← **Use this**: Restore with venv management
+├── backup-dotfiles.py        ← (Called by .sh script)
+├── restore-dotfiles.py       ← (Called by .sh script)
 ├── starship/                 ← Terminal prompt configs
 ├── fish/                     ← Fish shell configs
 ├── neovim/                   ← Editor configuration
