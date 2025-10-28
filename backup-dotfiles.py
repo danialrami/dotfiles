@@ -123,12 +123,6 @@ def commit_changes(detector):
     run_command(f"cd {DOTFILES_DIR} && git add . && git commit -m '{message}'", verbose=False)
     print("[INFO] Changes committed.")
 
-def push_to_github():
-    """Push changes to GitHub."""
-    print("[INFO] Pushing changes to GitHub...")
-    run_command(f"cd {DOTFILES_DIR} && git push", verbose=False)
-    print("[INFO] Changes pushed.")
-
 def main():
     """Main function to update dotfiles."""
     detector = EnvironmentDetector()
@@ -142,9 +136,9 @@ def main():
     backup_existing_files(detector)
     create_symlinks_with_stow(detector)
     commit_changes(detector)
-    push_to_github()
     
     print("[INFO] Dotfiles update complete.")
+    print("[INFO] To push changes to GitHub, run: cd ~/.dotfiles && git push")
 
 if __name__ == "__main__":
     main()
