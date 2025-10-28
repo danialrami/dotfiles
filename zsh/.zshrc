@@ -33,3 +33,8 @@ export PATH="$HOME/.tmuxifier/bin:$PATH"
 eval "$(tmuxifier init -)"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/danielramirez/.lmstudio/bin"
+# End of LM Studio CLI section
+

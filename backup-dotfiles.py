@@ -18,7 +18,8 @@ PACKAGES = {
     "wezterm": {"files": [".wezterm.lua"], "target": "~"},
     "brew": {"files": ["Brewfile"], "target": "~"},
     "starship": {"files": ["starship.toml"], "target": "~/.config"},
-    "neovim": {"files": [".config/nvim"], "target": "~", "is_dir": True}
+    "neovim": {"files": [".config/nvim"], "target": "~", "is_dir": True},
+    "opencode": {"files": [".config/opencode"], "target": "~", "is_dir": True}
 }
 
 def run_command(command, verbose=True):

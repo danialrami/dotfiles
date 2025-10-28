@@ -107,3 +107,14 @@ fi
 
 eval "$(tmuxifier init -)"
 eval "$(thefuck --alias)"
+
+# export WOLFRAMSCRIPT_KERNELPATH="ssh daniel@100.84.89.49 /opt/Wolfram/WolframEngine/14.2/Executables/WolframKernel"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/danielramirez/.lmstudio/bin"
+# End of LM Studio CLI section
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

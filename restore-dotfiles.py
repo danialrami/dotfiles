@@ -8,10 +8,11 @@ from datetime import datetime
 DOTFILES_REPO = "https://github.com/danialrami/dotfiles"  # Replace with your repo URL
 DOTFILES_DIR = os.path.expanduser("~/.dotfiles")
 BREWFILE_PATH = os.path.join(DOTFILES_DIR, "brew/Brewfile")
-STOW_PACKAGES = ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim"]
+STOW_PACKAGES = ["bash", "zsh", "tmux", "wezterm", "brew", "starship", "neovim", "opencode"]
 CONFIG_TARGETS = {
     "starship": "~/.config",
     "neovim": "~/.config",
+    "opencode": "~/.config",
 }
 
 def run_command(command):
