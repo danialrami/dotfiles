@@ -17,7 +17,7 @@ Unified dotfiles for cross-platform development environments on macOS (klaxon) a
 
 ### macOS or Arch Linux
 ```bash
-git clone https://github.com/yourusername/dotfiles ~/.dotfiles
+git clone https://github.com/danialrami/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ./restore-dotfiles.sh  # Orchestrator creates venv and runs setup
 ```
@@ -110,7 +110,7 @@ No manual configuration needed!
 
 ### First Time
 ```bash
-git clone https://github.com/yourusername/dotfiles ~/.dotfiles
+git clone https://github.com/danialrami/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ./restore-dotfiles.sh  # Creates venv, clones repo, stows packages
 ```
