@@ -64,8 +64,8 @@ class TestMultiPlatformSupport(unittest.TestCase):
         expected_files = {
             "scripts/detect-env.sh": True,
             "scripts/detect_env.py": True,
-            "starship/starship.common.toml": True,
-            "starship/starship.darwin.toml": True,
+            "starship/.config/starship/starship.common.toml": True,
+            "starship/.config/starship/starship.darwin.toml": True,
             "neovim/.config/nvim/lazy-lock.darwin.json": True,
             "neovim/.config/nvim/lazy-lock.arch.json": True,
             "fish/.config/fish/conf.d/00-environment.fish": True,
@@ -137,9 +137,9 @@ class TestConfigurationModularity(unittest.TestCase):
         starship_dir = Path(os.path.expanduser("~/.dotfiles/starship"))
         
         self.assertTrue((starship_dir / ".config" / "starship.toml").exists())
-        self.assertTrue((starship_dir / "starship.common.toml").exists())
-        self.assertTrue((starship_dir / "starship.darwin.toml").exists())
-        self.assertTrue((starship_dir / "starship.arch.toml").exists())
+        self.assertTrue((starship_dir / ".config" / "starship" / "starship.common.toml").exists())
+        self.assertTrue((starship_dir / ".config" / "starship" / "starship.darwin.toml").exists())
+        self.assertTrue((starship_dir / ".config" / "starship" / "starship.arch.toml").exists())
 
     def test_fish_modular_config(self):
         """Test that fish has modular conf.d structure"""
@@ -157,6 +157,7 @@ class TestConfigurationModularity(unittest.TestCase):
         self.assertTrue((scripts_dir / "detect-env.sh").exists())
         self.assertTrue((scripts_dir / "detect_env.py").exists())
         self.assertTrue((scripts_dir / "load-starship-config.sh").exists())
+        self.assertTrue((scripts_dir / "load-starship-config.fish").exists())
         self.assertTrue((scripts_dir / "init-nvim-lockfile.sh").exists())
 
 
