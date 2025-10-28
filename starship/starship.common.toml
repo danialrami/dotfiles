@@ -1,0 +1,75 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os\
+$directory\
+$git_branch\
+$git_status\
+$nodejs $python\
+$rust\
+$golang\
+$memory_usage\
+$battery\
+$time\
+$line_break\
+$character"""
+
+[git_branch]
+symbol = "🌿 "
+style = "bold #D69C56"
+format = '[$symbol$branch ]($style)'
+
+[git_status]
+style = "bold #E85C41"
+format = '[$all_status$ahead_behind ]($style)'
+modified = "✏️"
+untracked = "❓"
+staged = "✨"
+ahead = "🏃"
+behind = "🐌"
+diverged = "🔱"
+renamed = "📝"
+deleted = "🗑️"
+
+[python]
+symbol = "🐍 "
+style = "bold #8B8C7A"
+format = '[$symbol($version) ]($style)'
+
+[rust]
+symbol = "🦀 "
+style = "bold #8B8C7A"
+format = '[$symbol($version) ]($style)'
+
+[golang]
+symbol = "🐹 "
+style = "bold #8B8C7A"
+format = '[$symbol($version) ]($style)'
+
+[memory_usage]
+symbol = "🧠 "
+style = "bold #A5B1B7"
+threshold = 75
+format = '[$symbol${ram} ]($style)'
+disabled = false
+
+[time]
+disabled = false
+time_format = "%F %r"
+style = "bold #9A9B94"
+format = '[🕚 $time ]($style)'
+use_12hr = false
+
+[character]
+success_symbol = "[👉](bold #E6B655)"
+error_symbol = "[😵](bold #E85C41)"
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡️"
+discharging_symbol = "💨"
+format = '[$symbol$percentage ]($style)'
+
+[[battery.display]]
+threshold = 10
+style = 'bold red'
