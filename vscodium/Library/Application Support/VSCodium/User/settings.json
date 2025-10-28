@@ -62,5 +62,27 @@
         "asvetliakov.vscode-neovim": 1
     },
     
-    "application.shellEnvironmentResolutionTimeout": 30
+    "application.shellEnvironmentResolutionTimeout": 30,
+    "redhat.telemetry.enabled": false,
+    "yaml.schemas": {
+      "file:///Users/danielramirez/.vscode-oss/extensions/continue.continue-1.2.10-darwin-arm64/config-yaml-schema.json": [
+        ".continue/**/*.yaml"
+      ]
+    },
+    "continue.showInlineTip": false,
+    "[dockercompose]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2,
+      "editor.autoIndent": "advanced",
+      "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+      },
+      "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+      "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "git.ignoreRebaseWarning": true
 }

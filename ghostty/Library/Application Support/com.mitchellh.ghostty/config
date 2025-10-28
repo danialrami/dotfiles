@@ -12,7 +12,7 @@ selection-foreground = #1e1e2e
 selection-background = #f5e0dc
 cursor-color = #f5e0dc
 
-# Smart tmux startup script
+# Smart tmux startup script - RE-ENABLE after migration complete
 command = ~/.dotfiles/ghostty/scripts/ghostty-tmux.sh
 
 # macOS appearance customization

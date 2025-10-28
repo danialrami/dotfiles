@@ -1,46 +1,31 @@
-# ~/.config/fish/config.fish - Arch Linux (siku) version
+#!/usr/bin/env fish
 
-# Environment variables
-set -gx EZA_ICONS_AUTO 1
-set -gx LANG en_US.UTF-8
-set -gx LC_ALL en_US.UTF-8
-
-# Path modifications (fish uses lists, not colon-separated strings)
-set -gx PATH $HOME/.local/bin $PATH
-set -gx PATH $HOME/.cargo/bin $PATH
-
-# Arch-specific paths (different from macOS)
-if test -d /usr/bin
-    set -gx PATH /usr/bin $PATH
+for conf_file in ~/.config/fish/conf.d/*.fish
+    source $conf_file
 end
 
-# Only source files that exist on this system
-if test -f ~/.dotfiles/shared/secure_env.fish
-    source ~/.dotfiles/shared/secure_env.fish
+set -l python_cmd (command -v python3)
+if test -n "$python_cmd"
+    alias python "$python_cmd"
+    alias python3 "$python_cmd"
+    alias pip "$python_cmd -m pip"
+    alias pip3 "$python_cmd -m pip"
+    
+    if command -v python3.13 > /dev/null
+        alias python313 "python3.13"
+    end
+else
+    echo "⚠️ Warning: No python3 found in PATH"
 end
 
-# Skip macOS-specific go_env for now (we'll handle Go separately)
-source ~/.dotfiles/shared/go_env_arch.fish
-
-# Tool initializations - only if commands exist
-if command -v starship > /dev/null
-    starship init fish | source
+function show_python_info
+    echo "🐍 Current Python Setup:"
+    echo "  python3: $(command -v python3)"
+    echo "  Version: $(python3 --version 2>&1)"
+    echo "  pip3: $(command -v pip3)"
+    echo "  pip version: $(pip3 --version 2>&1)"
 end
 
-if command -v zoxide > /dev/null
-    zoxide init --cmd cd fish | source
-end
-
-if command -v tmuxifier > /dev/null
-    set -gx PATH $HOME/.tmuxifier/bin $PATH
-    tmuxifier init - fish | source
-end
-
-if command -v thefuck > /dev/null
-    thefuck --alias | source
-end
-
-# Conditional aliases for Rust tools
 if command -v bat > /dev/null
     alias cat "bat --style=auto"
     alias ccat "bat --style=plain"
@@ -62,15 +47,9 @@ if command -v eza > /dev/null
     alias ls "eza --icons=always --group-directories-first"
     alias ll "eza --icons=always --group-directories-first -l"
     alias la "eza --icons=always --group-directories-first -la"
-else
-    # Fallback to regular ls with some color
-    alias ls "ls --color=auto --group-directories-first"
-    alias ll "ls -l --color=auto --group-directories-first"
-    alias la "ls -la --color=auto --group-directories-first"
 end
 
 if command -v delta > /dev/null
-    # Configure git to use delta
     git config --global core.pager delta
     git config --global interactive.diffFilter "delta --color-only"
     git config --global delta.navigate true
@@ -83,14 +62,6 @@ end
 
 if command -v sd > /dev/null
     alias sed "sd"
-end
-
-# Arch-specific aliases
-if command -v yay > /dev/null
-    alias install "yay -S"
-    alias search "yay -Ss"
-    alias update "yay -Syu"
-    alias remove "yay -R"
 end
 
 if command -v bandwhich > /dev/null
@@ -109,37 +80,15 @@ if command -v just > /dev/null
     alias j "just"
 end
 
-# Yazi file manager with directory changing capability
 if command -v yazi > /dev/null
     alias fm "y"
     alias files "y"
 end
 
-# Add Node.js to PATH explicitly for LSP compatibility
-set -gx PATH /usr/bin $PATH
-set -gx NODE_PATH /usr/lib/node_modules
-
-# Ensure npm global packages are in PATH
-if test -d ~/.npm-global/bin
-    set -gx PATH ~/.npm-global/bin $PATH
-end
-
-# Audio development shortcuts (Arch paths)
-if command -v sclang > /dev/null
-    alias sc "sclang"
-    alias scstart "sclang"
-end
-
-# SuperCollider is likely at /usr/bin/sclang on Arch
-if test -f /usr/bin/sclang
-    set -gx SC_PATH /usr/bin/sclang
-end
-
-# Quick script execution aliases (functions are auto-loaded from functions/)
 alias run "run_script"
 alias x "run_script"
 
-# System management shortcuts
-alias syslog "journalctl -f"
-alias services "systemctl --user list-units"
-alias restart_audio "systemctl --user restart pipewire pipewire-pulse"
+if test -f "build_manual.py"
+    alias build_manual "python3 build_manual.py"
+    alias build "python3 build_manual.py"
+end

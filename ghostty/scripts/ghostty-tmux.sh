@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env arch -arm64 /bin/bash
 
-# Find tmux executable
+# Find tmux executable - prioritize ARM Homebrew
 TMUX_CMD=""
-for path in "/usr/local/bin/tmux" "/opt/homebrew/bin/tmux" "$(command -v tmux)"; do
+for path in "/opt/homebrew/bin/tmux" "/usr/local/bin/tmux" "$(command -v tmux)"; do
     if [ -x "$path" ]; then
         TMUX_CMD="$path"
         break

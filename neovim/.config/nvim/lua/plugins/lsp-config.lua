@@ -33,12 +33,13 @@ return {
       "j-hui/fidget.nvim",
     },
     config = function()
-      local lspconfig = require("lspconfig")
-      -- LSP Configurations
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       
-      -- Configure Lua LSP
-      lspconfig.lua_ls.setup({
+      -- Configure Lua LSP using new vim.lsp.config API
+      vim.lsp.config.lua_ls = {
+        cmd = { "lua-language-server" },
+        filetypes = { "lua" },
+        root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
         capabilities = capabilities,
         settings = {
           Lua = {
@@ -47,25 +48,26 @@ return {
             }
           }
         }
-      })
+      }
+      vim.lsp.enable('lua_ls')
       
-      -- Configure other servers
+      -- Configure other servers using new API
       local servers = {
-        "pyright", 
-        -- "tsserver",
-        "rust_analyzer", 
-        "cssls",
-        "html", 
-        "jsonls", 
-        "tailwindcss",
-        -- "gopls",
-        "clangd"
+        { name = "pyright", filetypes = { "python" } },
+        { name = "rust_analyzer", filetypes = { "rust" } },
+        { name = "cssls", filetypes = { "css", "scss", "less" } },
+        { name = "html", filetypes = { "html" } },
+        { name = "jsonls", filetypes = { "json", "jsonc" } },
+        { name = "tailwindcss", filetypes = { "html", "css", "javascript", "javascriptreact", "typescript", "typescriptreact" } },
+        { name = "clangd", filetypes = { "c", "cpp", "objc", "objcpp" } },
       }
       
       for _, server in ipairs(servers) do
-        lspconfig[server].setup({
+        vim.lsp.config[server.name] = {
           capabilities = capabilities,
-        })
+          filetypes = server.filetypes,
+        }
+        vim.lsp.enable(server.name)
       end
       
       -- LSP Keybindings
