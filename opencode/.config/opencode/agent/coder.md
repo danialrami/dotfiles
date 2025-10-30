@@ -1,7 +1,7 @@
 ---
 description: Code generation and development with Qwen Coder
 mode: subagent
-model: anthropic/claude-haiku-4-5-20251001
+model: qwen/qwen3-coder-30b
 temperature: 0.55
 tools:
   write: true

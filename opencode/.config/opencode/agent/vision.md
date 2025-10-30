@@ -1,7 +1,7 @@
 ---
 description: Browser research and visual analysis with Qwen VL
 mode: subagent
-model: anthropic/claude-haiku-4-5-20251001
+model: qwen/qwen3-vl-30b
 temperature: 0.55
 tools:
   browserOS*: true
