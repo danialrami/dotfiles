@@ -1,50 +1,50 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "catppuccin",
-  "model": "anthropic/claude-haiku-4-5-20251001",
+  "model": "ollama/minimax-m2:cloud",
   "provider": {
-  //    "ollama": {
-  //      "npm": "@ai-sdk/openai-compatible",
-  //      "name": "ollama",
-  //      "options": {
-  //        "baseURL": "http://127.0.0.1:11434/v1"
-  //      },
-  //      "models": {
-  //        "gpt-oss:latest": {
-  //          "name": "gpt-oss:latest"
-  //        },
-  //        "qwen3-coder:30b": {
-  //          "name": "qwen3-coder:30b"
-  //        }
-  //      }
-  //    },
-      "lmstudio": {
-        "npm": "@ai-sdk/openai-compatible",
-        "name": "lmstudio",
-        "options": {
-          "baseURL": "http://127.0.0.1:1234/v1"
-        },
-        "models": {
-          "qwen/qwen3-vl-30b": {
-            "name": "qwen/qwen3-vl-30b"
-          }, 
-          "qwen/qwen3-coder-30b": {
-            "name": "qwen/qwen3-coder-30b"
-          },
-          "openai/gpt-oss-20b": {
-            "name": "openai/gpt-oss-20b"
-          }
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "ollama",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      },
+      "models": {
+        "minimax-m2:cloud": {
+          "name": "minimax-m2:cloud"
         }
       }
     },
-    "agent": {
-      "build": {
-        "model": "lmstudio/openai/gpt-oss-20b"
+    "lmstudio": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "lmstudio",
+      "options": {
+        "baseURL": "http://127.0.0.1:1234/v1"
       },
-      "plan": {
-        "model": "lmstudio/openai/gpt-oss-20b"
+      "models": {
+        "qwen/qwen3-vl-30b": {
+          "name": "qwen/qwen3-vl-30b"
+        }, 
+        "qwen/qwen3-coder-30b": {
+          "name": "qwen/qwen3-coder-30b"
+        },
+        "openai/gpt-oss-20b": {
+          "name": "openai/gpt-oss-20b"
+        },
+        "qwen/qwen3-30b-a3b-thinking-2507": {
+          "name": "qwen/qwen3-30b-a3b-thinking-2507"
+        }
       }
+    }
+  },
+  "agent": {
+    "build": {
+      "model": "qwen/qwen3-30b-a3b-thinking-2507"
     },
+    "plan": {
+      "model": "qwen/qwen3-30b-a3b-thinking-2507"
+    }
+  },
   "mcp": {
     "MCP_DOCKER": {
       "type": "local",
@@ -53,7 +53,7 @@
     },
     "browserOS": {
       "type": "local",
-      "command": ["npx", "@agent-infra/mcp-server-browser@latest"],
+      "command": ["npx", "-y", "mcp-remote", "http://127.0.0.1:9100/mcp"],
       "enabled": true
     }
   }

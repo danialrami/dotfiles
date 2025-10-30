@@ -1,5 +1,8 @@
 #!/usr/bin/env fish
 
+# Set default editor for OpenCode and other tools
+set -gx EDITOR "vscodium -r"
+
 for conf_file in ~/.config/fish/conf.d/*.fish
     source $conf_file
 end

@@ -1,4 +1,8 @@
 # ~/.dotfiles/zsh/.zshrc
+
+# Set default editor for OpenCode and other tools
+export EDITOR=nvim
+
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
@@ -37,4 +41,3 @@ eval "$(pyenv init -)"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/danielramirez/.lmstudio/bin"
 # End of LM Studio CLI section
-

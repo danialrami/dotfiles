@@ -1,5 +1,8 @@
 # ~/.dotfiles/bash/.bashrc
 
+# Set default editor for OpenCode and other tools
+export EDITOR=nvim
+
 # Load environment variables first (usually fastest)
 source ${HOME}/.ghcup/env
 source ~/.dotfiles/shared/fabric_aliases.sh
@@ -113,7 +116,6 @@ eval "$(thefuck --alias)"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/danielramirez/.lmstudio/bin"
 # End of LM Studio CLI section
-
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
