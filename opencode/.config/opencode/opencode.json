@@ -28,9 +28,6 @@
         "qwen/qwen3-coder-30b": {
           "name": "qwen/qwen3-coder-30b"
         },
-        "openai/gpt-oss-20b": {
-          "name": "openai/gpt-oss-20b"
-        },
         "qwen/qwen3-30b-a3b-thinking-2507": {
           "name": "qwen/qwen3-30b-a3b-thinking-2507"
         }
