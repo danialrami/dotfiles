@@ -1,7 +1,7 @@
 ---
 description: Code generation and development with Qwen Coder
 mode: subagent
-model: qwen/qwen3-coder-30b
+model: lmstudio/qwen/qwen3-coder-30b
 temperature: 0.55
 tools:
   write: true
