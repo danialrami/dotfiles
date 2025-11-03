@@ -1,0 +1,21 @@
+{
+  "name": "{PROJECT_NAME_KEBAB}",
+  "version": "0.1.0",
+  "description": "A TypeScript/Node.js project",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test dist/**/*.test.js",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "{AUTHOR}",
+  "license": "{LICENSE_TYPE}",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {}
+}

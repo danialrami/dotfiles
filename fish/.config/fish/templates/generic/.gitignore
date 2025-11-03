@@ -1,0 +1,38 @@
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+.env
+.env.local
+.venv
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.classpath
+
+# OS
+Thumbs.db
+.directory
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.pyc
+__pycache__/
+
+# Dependencies
+node_modules/
+.yarn/
+vendor/
+
+# Logs
+*.log
+logs/
