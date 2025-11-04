@@ -1,0 +1,13 @@
+# Default stow ignores
+RCS
+\.#.*
+\.git.*
+\.gitignore
+\.gitmodules
+^/README
+^/LICENSE
+^/COPYING
+
+# macOS
+\.DS_Store
+EOF
