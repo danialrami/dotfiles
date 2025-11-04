@@ -95,3 +95,6 @@ if test -f "build_manual.py"
     alias build_manual "python3 build_manual.py"
     alias build "python3 build_manual.py"
 end
+
+# LazyVim as primary nvim, old config as fallback
+alias nvim-lufs="NVIM_APPNAME=nvim-lufs nvim"

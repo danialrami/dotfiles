@@ -12,7 +12,7 @@ selection-foreground = #1e1e2e
 selection-background = #f5e0dc
 cursor-color = #f5e0dc
 
-# Smart tmux startup script - RE-ENABLE after migration complete
+# Smart tmux startup script
 command = ~/.dotfiles/ghostty/scripts/ghostty-tmux.sh
 
 # macOS appearance customization
@@ -21,7 +21,6 @@ macos-option-as-alt = true
 macos-titlebar-proxy-icon = "hidden"
 
 # Performance and visual enhancements
-# background-opacity = 0.98
 mouse-hide-while-typing = true
 window-inherit-working-directory = false
 working-directory = home
