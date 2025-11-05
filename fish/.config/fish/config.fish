@@ -98,3 +98,7 @@ end
 
 # LazyVim as primary nvim, old config as fallback
 alias nvim-lufs="NVIM_APPNAME=nvim-lufs nvim"
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/danielramirez/.lmstudio/bin
+# End of LM Studio CLI section
+
